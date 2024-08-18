@@ -145,7 +145,7 @@ const Login = () => {
                         <p className="text-center font-nunito">
                             Don't have an account?{" "}
                             <Link
-                                to="/admin/signup"
+                                to="/signup"
                                 className="text-[#5A8CFF] font-medium underline underline-offset-2"
                             >
                                 Create Account
