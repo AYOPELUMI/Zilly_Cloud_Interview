@@ -4,6 +4,7 @@ import {
 } from "react-router-dom";
 import Login from "./Auth/Login";
 import SignUp from "./Auth/Signup";
+import { Dashboard, DashboardLoader } from "./Dashboard/dashboard";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,11 @@ const router = createBrowserRouter([
   {
     path:"/signup",
     element: <SignUp />
+  },
+  {
+    path:"/dashboard",
+    element: <Dashboard />,
+    loader: DashboardLoader
   }
 ])
 

@@ -16,8 +16,8 @@ interface  RegisterData {
     avatar: File | null;
     dp: string | null;
     phone: string;
-    device_type: string
-    locality_id: string
+    device_type: string | undefined | null;
+    locality_id: string;
   }
 
   type errorData = {
@@ -58,10 +58,11 @@ const SignUp = () => {
   });
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
 
 useEffect(() => {
-    if(platform.os.family){
+    if(platform && platform.os){
         setFormData({
             ...formData,
             "device_type": platform.os.family,
@@ -203,9 +204,14 @@ useEffect(() => {
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
     //   navigate('/dashboard');
-    },
+      setTimeout(() =>{
+        setIsSubmitting(false)
+      toast.success("account created successfully")},2000)
+            setTimeout(() =>{
+      navigate("/")},3000)
+      },
     onError: (error) => {
-      console.error('Login failed:', error);
+      console.error('sign up failed:', error);
     },
   });
 
@@ -213,23 +219,20 @@ useEffect(() => {
     e.preventDefault();
     console.log("over here")
     if (validate()) {
-
+      setIsSubmitting(true)
         const newFormData = new FormData()
         
         for(const key in formData){
             const value = formData[key as keyof RegisterData];
 
-            if (value !== null) {
+            if (value !== null && value !== undefined) {
                 newFormData.append(key, value);
             }
         }
 
       console.log('Form data is valid:', newFormData);
       mutation.mutate(newFormData);
-      setTimeout(() =>{
-      toast.success("account created successfully")},2000)
-            setTimeout(() =>{
-      navigate("/")},3000)
+
       // createAccount()
     } else {
       console.log('Form data is invalid:', errors);
@@ -247,7 +250,7 @@ useEffect(() => {
           <p className="text-base text-[#202224]">Create a account to continue</p>
         </div>
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-3  grid md:grid-cols-2 gap-3">
+          <div className="space-y-3  grid md:grid-cols-2 gap-6">
           <div>Avatar
           <label className="block overflow-hidden relative w-24 h-24 ">
                 <img className={`h-24 w-24 object-cover border-2 rounded-full hover:opacity-50 ${errors.avatar ? "border-orange-600" :"border-[#D8D8D8]"}`} src={typeof formData.dp === 'string' ? formData.dp : '/default-avatar.png'} />
@@ -303,10 +306,10 @@ useEffect(() => {
           </div>
           <div className="space-y-2">
             <div>
-              <button type="submit" className="w-full px-8 py-3 font-medium rounded-md hover:bg-[#5A8CFF] bg-[#4880FF] text-white md:mx-auto">Sign Up</button>
+              <button type="submit" className="w-full px-8 py-3 font-medium rounded-md hover:bg-[#5A8CFF] bg-[#4880FF] text-white md:mx-auto">{isSubmitting ? "Signing up ..." : "Sign Up"}</button>
             </div>
             <p className="px-3 text-sm text-center text-gray-400">Already have an account ?
-              <Link rel="noopener noreferrer" to="/admin" className=" ml-2 underline text-[#4880FF]">Log in</Link>.
+              <Link rel="noopener noreferrer" to="/" className=" ml-2 underline text-[#4880FF]">Log in</Link>.
             </p>
           </div>
         </form>
