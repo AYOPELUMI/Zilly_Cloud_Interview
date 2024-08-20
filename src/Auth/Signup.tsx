@@ -244,7 +244,7 @@ useEffect(() => {
   console.log({formData})
 
   return (
-    <section style={{backgroundImage: `url(${bgImage})`}} className="w-screen min-h-screen flex justify-center items-center">
+    <section style={{backgroundImage: `url(${bgImage})`}} className="bg-[#4880FF] w-screen min-h-screen flex justify-center items-center">
       <div className="relative flex flex-col  md:p-10 rounded-md p-6 bg-white border-[0.3px] border-[#B9B9B9]">
       <Toaster />
         <div className="mb-5 text-center">
