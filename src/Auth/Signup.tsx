@@ -211,6 +211,8 @@ useEffect(() => {
       navigate("/")},3000)
       },
     onError: (error) => {
+      toast.error("try again")
+      setIsSubmitting(false)
       console.error('sign up failed:', error);
     },
   });

@@ -62,6 +62,8 @@ const Login = () => {
         }, 2000);
         },
         onError: (error) => {
+            toast.error("try again")
+      setIsSubmitting(false)
           console.error('Login failed:', error);
         },
       });
