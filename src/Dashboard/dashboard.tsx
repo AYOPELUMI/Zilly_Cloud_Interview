@@ -3,8 +3,8 @@ import { redirect, useLoaderData } from "react-router-dom";
 import { fetchProfile } from "./api";
 import ImageComponent from "./ImageComponent";
 
-import SwiperClass from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper as SwiperClass } from 'swiper';
+import { Swiper as SwiperComponent, SwiperRef, SwiperSlide, } from 'swiper/react';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -23,9 +23,9 @@ interface User {
 }
 
 interface Data {
-    user: User | null;
     token: string | null;
-    data : object[];
+    data : User[];
+    user : User | null;
     // Add other fields as necessary
 }
 
@@ -52,12 +52,13 @@ export const Dashboard = () => {
     const [slidesPerView, setSlidesPerView] = useState(1);
 
     const paginationList = state.data.length - slidesPerView + 1;
+    const [swiper, setSwiper] = useState<SwiperClass|null>(null)
 
     useEffect(() => {
         const userString = localStorage.getItem("user");
         const user: Data | null = userString ? (JSON.parse(userString) as Data) : null;
 
-        if (user?.user) {
+        if (user) {
             setUser(user.user);
         }
 
@@ -81,18 +82,35 @@ export const Dashboard = () => {
     console.log({ state });
     console.log({ user });
 
-    const swiperRef = useRef< SwiperClass | null>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const swiperRef = useRef<SwiperRef>(null)
+    // swiperRef.current.swiper.slideNext()
+    // const swiperRef = React.useCallback((node: SwiperClass | null) => {
+    //     if (node !== null) {
+    //         // node is Swiper instance
+    //         node.on('slideChange', () => {
+    //             setActiveIndex(node.activeIndex);
+    //         });
+    //     }
+    // }, []);
 
     const gotoSlide = (index: number) => {
-        swiperRef.current?.slideTo(index);
+        if (swiper) {
+            swiper.slideTo(index)
+
+        }
     };
 
     const nextSlide = () => {
-        swiperRef.current?.slideTo(activeIndex + 1);
+        // swiperRef.current?.slideTo(activeIndex + 1);
+        if (swiper)
+        swiper.slideNext()
     };
 
     const prevSlide = () => {
-        swiperRef.current?.slideTo(activeIndex - 1);
+        // swiperRef.current?.
+        if (swiper)
+        swiper.slidePrev()
     };
 
     const swiperNavStyle = "text-blue-500 text-5xl animate-pulse md:text-7xl cursor-pointer";
@@ -114,8 +132,10 @@ export const Dashboard = () => {
                     </div>
                 )}
                 <div className="relative w-full">
-                <Swiper
+                <SwiperComponent
                     ref={swiperRef}
+                    onSwiper={setSwiper}
+          
                     spaceBetween={30}
                     slidesPerView={slidesPerView}
                     onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
@@ -126,7 +146,7 @@ export const Dashboard = () => {
                             <ImageComponent key={index} id={item.avatar} alt="Red Circle" />
                         </SwiperSlide>
                     ))}
-                </Swiper>
+                </SwiperComponent>
 
                 {activeIndex > 0 && (
                     <div onClick={prevSlide} className='absolute top-1/2 lg:top-1/2 translate-y-1/4 md:-translate-y-[92px] z-50 opacity-100 -left-8 md:-left-16'>
