@@ -111,10 +111,8 @@ const Login = () => {
 
     const login = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        setIsSubmitting(true); 
          if (validate()){
-                
+                setIsSubmitting(true)
         const formData = new FormData()
         
         for(const key in loginData){
